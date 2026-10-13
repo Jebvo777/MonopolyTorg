@@ -5,10 +5,16 @@ $rawPath=parse_url($_SERVER['REQUEST_URI']??'/',PHP_URL_PATH)?:'/';
 $path=rawurldecode($rawPath);
 $base=config('base_path');if($base&&str_starts_with($path,$base.'/'))$path=substr($path,strlen($base));
 $path='/'.trim($path,'/');
+if(isset($_GET['utm_source']))$_SESSION['utm_source']=substr((string)$_GET['utm_source'],0,100);
 if($path==='/index.php')redirect('/',301);
 if(str_starts_with($path,'/admin')){require ROOT.'/app/admin.php';exit;}
 if(str_starts_with($path,'/api/')){require ROOT.'/app/requests.php';handle_api($path);exit;}
 if(($_SERVER['REQUEST_METHOD']??'GET')!=='GET'&&($_SERVER['REQUEST_METHOD']??'GET')!=='HEAD'){http_response_code(405);header('Allow: GET, HEAD');exit;}
+if($path==='/theme.css'){
+ header('Content-Type: text/css; charset=utf-8');header('Cache-Control: public, max-age=60');
+ $colors=['accent'=>setting('theme_accent','#1f4e79'),'accent2'=>setting('theme_warm','#f59e0b'),'bg'=>setting('theme_background','#f3f6f9')];
+ echo 'body.palette-1{';foreach($colors as $key=>$color)if(preg_match('/^#[0-9a-fA-F]{6}$/',$color))echo '--'.$key.':'.$color.';';echo '}';exit;
+}
 if($path==='/robots.txt'){
  header('Content-Type: text/plain; charset=utf-8');echo "User-agent: *\nAllow: /\nDisallow: ".url('/admin')."\nDisallow: ".url('/api')."\nDisallow: ".url('/request')."\nDisallow: ".url('/success')."\nDisallow: ".url('/search')."\nSitemap: ".absolute_url('/sitemap.xml')."\n";exit;
 }

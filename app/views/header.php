@@ -29,6 +29,7 @@ $nav=json_value(setting('header_menu'),[]);
 <link rel="stylesheet" href="<?= e(asset('assets/fonts/fonts.css')) ?>">
 <link rel="stylesheet" href="<?= e(asset('assets/css/styles.css')) ?>">
 <link rel="stylesheet" href="<?= e(asset('assets/css/site.css')) ?>">
+<link rel="stylesheet" href="<?= e(url('/theme.css')) ?>">
 <script defer src="<?= e(asset('assets/js/site.js')) ?>"></script>
 <script type="application/ld+json" nonce="<?= e(csrf()) ?>"><?= json_encode(['@context'=>'https://schema.org','@type'=>'Organization','name'=>$brand,'url'=>absolute_url('/'),'logo'=>absolute_url($logo),'telephone'=>setting('phone'),'email'=>setting('email'),'foundingDate'=>setting('founded','2009'),'address'=>['@type'=>'PostalAddress','streetAddress'=>'Киришская ул., д. 2А, помещение 8Н','addressLocality'=>'Санкт-Петербург','postalCode'=>'195299','addressCountry'=>'RU']],JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_HEX_TAG) ?></script>
 <?php if(isset($schema)): ?><script type="application/ld+json" nonce="<?= e(csrf()) ?>"><?= json_encode($schema,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_HEX_TAG) ?></script><?php endif ?>
