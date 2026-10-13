@@ -1,0 +1,18 @@
+{
+  "generation_count": 9,
+  "method": "Built-in image generation",
+  "common_prompt": "Professional believable industrial commercial photography, landscape 1536x1024, restrained navy and amber palette, no readable text, logos, watermarks or collage.",
+  "assets": [
+    {"file":"public/assets/img/cable.webp","prompt":"Clean industrial cable warehouse, large wooden cable reels and black cable, blue racks, daylight, main subjects on right and usable dark space on left for hero copy."},
+    {"file":"public/assets/img/metal.webp","prompt":"Industrial steel warehouse with orderly bundles of rebar, steel profiles and rectangular pipes, realistic steel texture and warm safety accents."},
+    {"file":"public/assets/img/profile.webp","prompt":"Stacked galvanized and graphite coated trapezoidal roofing sheets in a warehouse, repeating ridges, warm slanting daylight."},
+    {"file":"public/assets/img/transformers.webp","prompt":"Modern outdoor electrical transformer substation, gray cabinets and oil transformer with cooling fins, clean fenced utility yard."},
+    {"file":"public/assets/img/about.webp","prompt":"Expansive organized building materials warehouse, steel bundles and cable reels, parked amber forklift, skylights."},
+    {"file":"public/assets/img/delivery.webp","prompt":"Unbranded navy flatbed truck with securely strapped steel pipes and cable reel, clean industrial loading yard."},
+    {"file":"public/assets/img/documents.webp","prompt":"Technical desk with rolled blank drawings, calipers, steel profile offcut, navy folder and pencil, no invented certificates or readable words."},
+    {"file":"public/assets/img/contacts.webp","prompt":"Generic Saint Petersburg industrial business courtyard with brick office facade and blue warehouse; contextual illustration, not an exact-address photograph."},
+    {"file":"public/assets/img/logo-mark.png","prompt":"Redesign provided old globe and ribbon brand icon. Preserve globe, Eurasian landmass and curved ribbon, use navy #1F4E79 and amber #F59E0B, remove old lettering, transparent background, crisp minimal geometric mark without additional symbols."}
+  ],
+  "product_images": "Only from supplied old-site archive, with SVG placeholder where absent.",
+  "logo_reference": "Old favicon from supplied old-site archive."
+}

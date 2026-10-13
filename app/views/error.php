@@ -1,0 +1,1 @@
+<section class="section container"><div class="status-card"><span class="error-number">404</span><h1><?= e($page['h1']) ?></h1><p class="lead"><?= e($page['lead']) ?></p><div class="hero-actions"><a class="btn btn-primary" href="<?= url('/catalog') ?>">Каталог продукции</a><a class="btn btn-secondary" href="<?= url('/search') ?>">Поиск</a></div></div></section>
