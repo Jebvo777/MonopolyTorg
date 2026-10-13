@@ -1,0 +1,16 @@
+Options -Indexes
+DirectoryIndex index.php
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule (^|/)\. - [F,L]
+RewriteRule ^(?:app|data|database|docs|tools|bin|storage|asset-packs|releases)(?:/|$) - [F,L,NC]
+RewriteRule ^(?:ACCESS\.txt|README\.md|INSTALL\.md|.*\.(?:sql|zip|log|json|md))$ - [F,L,NC]
+RewriteRule ^public/ - [L]
+RewriteRule ^(assets/.*|favicon\.ico|apple-touch-icon\.png)$ public/$1 [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+</IfModule>
+<FilesMatch "^(ACCESS\.txt|README\.md|INSTALL\.md|.*\.(sql|zip|log|json|md))$">
+Require all denied
+</FilesMatch>
