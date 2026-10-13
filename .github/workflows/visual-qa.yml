@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'app/**'
+      - 'database/**'
       - 'public/**'
       - 'ci/**'
       - '.github/workflows/visual-qa.yml'
