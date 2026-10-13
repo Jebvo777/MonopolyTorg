@@ -22,7 +22,8 @@ if (PHP_SAPI !== 'cli') {
 function config(string $key, mixed $default=null): mixed { global $config; return $config[$key] ?? $default; }
 function db(): PDO {
     static $pdo;
-    if (!$pdo) $pdo = new PDO('mysql:host='.config('db_host').';port='.config('db_port').';dbname='.config('db_name').';charset=utf8mb4',config('db_user'),config('db_password'),[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC,PDO::ATTR_EMULATE_PREPARES=>false]);
+    if (!$pdo) { $pdo = new PDO('mysql:host='.config('db_host').';port='.config('db_port').';dbname='.config('db_name').';charset=utf8mb4',config('db_user'),config('db_password'),[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC,PDO::ATTR_EMULATE_PREPARES=>false]);
+    $pdo->exec("SET time_zone = ".$pdo->quote(date('P'))); }
     return $pdo;
 }
 function query(string $sql, array $args=[]): PDOStatement { $s=db()->prepare($sql); $s->execute($args); return $s; }

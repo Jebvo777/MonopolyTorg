@@ -22,7 +22,7 @@ $nav=json_value(setting('header_menu'),[]);
 <meta property="og:description" content="<?= e(truncate(strip_tags($metaDescription),200)) ?>">
 <meta property="og:url" content="<?= e($canonical) ?>">
 <meta property="og:site_name" content="<?= e($brand) ?>">
-<meta property="og:image" content="<?= e(absolute_url($ogImage??$page['image']??'assets/img/cable.webp')) ?>">
+<meta property="og:image" content="<?= e(absolute_url(($ogImage??$page['image']??'')?:'assets/img/cable.webp')) ?>">
 <link rel="icon" type="image/x-icon" href="<?= e(asset(setting('favicon','favicon.ico'))) ?>">
 <link rel="icon" type="image/svg+xml" href="<?= e(asset('assets/img/favicon.svg')) ?>">
 <link rel="apple-touch-icon" href="<?= e(asset('apple-touch-icon.png')) ?>">

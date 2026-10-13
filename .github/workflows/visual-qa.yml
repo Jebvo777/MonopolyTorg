@@ -1,0 +1,50 @@
+name: Visual QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - 'public/**'
+      - 'ci/**'
+      - '.github/workflows/visual-qa.yml'
+permissions:
+  contents: read
+jobs:
+  visual:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: qa-only-root
+        ports: ['3306:3306']
+        options: --health-cmd="mysqladmin ping -h localhost -pqa-only-root" --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_mysql, mbstring, dom, fileinfo
+      - name: Restore supplied assets and database
+        run: |
+          python3 tools/unpack_assets.py
+          mysql -h 127.0.0.1 -u root -pqa-only-root < database/monopoly_install.sql
+          php ci/setup-qa.php
+      - name: Prepare browser
+        run: |
+          npm install --no-save --prefix ci playwright
+          node ci/node_modules/playwright/cli.js install --with-deps chromium
+      - name: Render public pages and administration
+        run: |
+          php -S 127.0.0.1:8085 -t public bin/router.php > /tmp/monopoly-qa-server.log 2>&1 &
+          node ci/visual-qa.cjs
+      - name: Save visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monopoly-visual-qa
+          path: |
+            qa/screens
+            qa/visual-layout.json
+          retention-days: 7
