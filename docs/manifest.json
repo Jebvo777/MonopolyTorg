@@ -1,0 +1,30 @@
+{
+  "source": "Старая копия сайта.zip",
+  "source_domain": "www.monopoly-torg.ru",
+  "snapshot_finished": "2026-10-13T07:35:25.8338302+00:00",
+  "downloaded_files": 2490,
+  "html_files": 1434,
+  "categories": 29,
+  "products": 967,
+  "products_with_image": 894,
+  "product_image_files": 707,
+  "documents": 29,
+  "articles": 18,
+  "redirects": 1076,
+  "root_counts": {
+    "cable": 882,
+    "metal": 32,
+    "profile": 13,
+    "transformers": 40
+  },
+  "source_errors": 25,
+  "brand": "торговая компания «Монополия»",
+  "contact": {
+    "phone": "+7 (812) 932-86-48",
+    "email": "monopoly@list.ru",
+    "address": "195299, Санкт-Петербург, Киришская ул., д. 2А, помещение 8Н",
+    "hours": "Пн–Пт, 09:30–18:00"
+  },
+  "design_source": "monopoly-site-v2(2).zip",
+  "design_product_groups": 52
+}
