@@ -10,7 +10,7 @@ with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED,compresslevel=7) as z:
  for file in sorted(ROOT.rglob('*')):
   if not file.is_file():continue
   rel=file.relative_to(ROOT)
-  if rel.parts[0] in ['.git','asset-packs','releases']:continue
+  if rel.parts[0] in ['.git','.github','asset-packs','releases','ci','qa','node_modules']:continue
   if rel.parts[0]=='storage' and file.name not in ['.gitkeep','.htaccess']:continue
   if file.name=='.gitignore' or str(rel)=='docs/release.json':continue
   z.write(file,'monopoly-site/'+str(rel))

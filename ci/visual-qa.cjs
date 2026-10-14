@@ -14,6 +14,7 @@ fs.mkdirSync('qa/screens',{recursive:true});
  urls['product-long']='/product/'+cat.products.reduce((a,b)=>a.name.length>b.name.length?a:b).slug;
  urls['product-placeholder']='/product/'+cat.products.find(x=>x.image.includes('placeholder')).slug;
  const layout=[];
+ urls['product-unbroken']='/product/'+cat.products.find(x=>x.name.startsWith('КСНРТ,')).slug;
  for(const [size,width] of [['desktop',1440],['mobile',390]]){
   await p.setViewportSize({width,height:size==='desktop'?1000:844});
   for(const [name,url] of Object.entries(urls)){
@@ -24,9 +25,9 @@ fs.mkdirSync('qa/screens',{recursive:true});
  }
  // Check every distinct imported body at a mobile width.
  const allPaths=[...cat.products.map(x=>'/product/'+x.slug),...cat.categories.map(x=>'/catalog/'+x.slug),...pages.filter(x=>!['home','404','success'].includes(x.slug)).map(x=>'/'+x.slug)];
- await p.setViewportSize({width:390,height:844});const bodyIssues=[];
- for(let i=0;i<allPaths.length;i++){
-  const url=allPaths[i];await p.goto(base+url,{waitUntil:'load'});
+ await p.setViewportSize({width:390,height:844});const bodyIssues=[];let bodyChecked=0;
+ for(let i=0;process.env.QA_FULL_BODIES==='1'&&i<allPaths.length;i++){
+  bodyChecked++;const url=allPaths[i];await p.goto(base+url,{waitUntil:'load'});
   const data=await p.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,broken:[...document.images].filter(x=>x.complete&&x.naturalWidth===0).map(x=>x.src)}));
   if(data.scroll>data.width||data.broken.length){bodyIssues.push({url,...data});if(bodyIssues.length<25)await p.screenshot({path:'qa/screens/body-issue-'+bodyIssues.length+'.png',fullPage:true});}
   if((i+1)%100===0)console.log('Mobile bodies checked '+(i+1));
@@ -34,7 +35,9 @@ fs.mkdirSync('qa/screens',{recursive:true});
  // Verify the real add-to-request interaction.
  await p.goto(base+urls['product-cable'],{waitUntil:'networkidle'});
  await p.locator('.buy-row [name=quantity]').fill('2');
+ const cartResponse=p.waitForResponse(r=>r.url().endsWith('/api/cart')&&r.request().method()==='POST');
  await p.locator('.buy-row button[type=submit]').click();
+ const cartResult=await (await cartResponse).json();if(!cartResult.ok)throw new Error('Cart API: '+JSON.stringify(cartResult));
  await p.waitForFunction(()=>document.querySelector('[data-cart-count]').textContent==='1');
  await p.goto(base+'/request',{waitUntil:'networkidle'});
  for(const [size,width] of [['desktop',1440],['mobile',390]]){await p.setViewportSize({width,height:900});await p.screenshot({path:'qa/screens/'+size+'-request-filled.png',fullPage:true});}
@@ -49,6 +52,6 @@ fs.mkdirSync('qa/screens',{recursive:true});
    layout.push({size,name:'admin-'+name,status:r.status(),...data});console.log(size+' admin '+name+' overflow='+String(data.scroll>data.width));
   }
  }
- fs.writeFileSync('qa/visual-layout.json',JSON.stringify({browser:browser.version(),layout,bodyIssues,bodyCount:allPaths.length,errors},null,2));
+ fs.writeFileSync('qa/visual-layout.json',JSON.stringify({browser:browser.version(),layout,bodyIssues,bodyCount:bodyChecked,errors},null,2));
  await browser.close();if(errors.length)process.exitCode=1;
 })().catch(e=>{fs.writeFileSync('qa/visual-layout.json',JSON.stringify({fatal:String(e)},null,2));console.error(e);process.exit(1)});

@@ -5,7 +5,7 @@ const toastEl = document.querySelector('#toast');
 let toastTimer;
 function toast(text) { if(!toastEl)return;toastEl.textContent=text;toastEl.classList.add('is-show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.classList.remove('is-show'),3800); }
 async function post(form) {
- const response=await fetch(form.action,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json','X-CSRF-Token':csrf},credentials:'same-origin'});
+ const response=await fetch(form.getAttribute('action')||location.href,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json','X-CSRF-Token':csrf},credentials:'same-origin'});
  const data=await response.json();if(!response.ok||!data.ok)throw new Error(data.error||'Не удалось обработать запрос. Повторите попытку.');return data;
 }
 function updateCount(n){document.querySelectorAll('[data-cart-count]').forEach(el=>el.textContent=n);}

@@ -48,6 +48,9 @@ function rich(string $html): string {
     $doc=new DOMDocument();$prior=libxml_use_internal_errors(true);
     $doc->loadHTML('<?xml encoding="utf-8" ?><div id="safe-content">'.$html.'</div>',LIBXML_HTML_NOIMPLIED|LIBXML_HTML_NODEFDTD);
     libxml_clear_errors();libxml_use_internal_errors($prior);
+    // Keep the wrapper reference before removing attributes: libxml can reuse
+    // the removed ID entry for a later element.
+    $wrapper=$doc->getElementsByTagName('div')->item(0);
     $allowed=['div','p','h2','h3','h4','ul','ol','li','table','thead','tbody','tr','th','td','strong','b','em','i','br','a','img','sub','sup','caption','blockquote'];
     foreach (iterator_to_array($doc->getElementsByTagName('*')) as $node) {
         if (!in_array($node->nodeName,$allowed,true)) { $node->parentNode?->removeChild($node);continue; }
@@ -65,9 +68,7 @@ function rich(string $html): string {
             $node->setAttribute('rel','noopener');
         }
     }
-    $out='';$wrapper=$doc->getElementById('safe-content');
-    // Attribute stripping intentionally removes the wrapper id; it is the first div.
-    $wrapper=$wrapper ?: $doc->getElementsByTagName('div')->item(0);
+    $out='';
     if ($wrapper) foreach($wrapper->childNodes as $n)$out.=$doc->saveHTML($n);
     return $out;
 }
