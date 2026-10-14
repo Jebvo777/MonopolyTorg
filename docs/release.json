@@ -1,8 +1,8 @@
 {
   "archive": "monopoly-php-site.zip",
-  "archive_bytes": 28041183,
-  "archive_sha256": "c5688a79908886e9451023ea5d73a3bdbed481a75488b5a56890a71aa7355c07",
+  "archive_bytes": 28043017,
+  "archive_sha256": "bf667176efb3362aec7568feb75b0df06954a40765c74fb027cb822ab9d3eb5c",
   "sql": "monopoly_install.sql",
-  "sql_bytes": 9581466,
-  "sql_sha256": "65776f77fd639a58a8a56c24b640a88f29b9838419347c1ad2c97906d18c1ecb"
+  "sql_bytes": 9581470,
+  "sql_sha256": "3e159c1eb0fc83b02e9209667ff35235a20975f814be46bf373ae15c6a5dfe9a"
 }
