@@ -62,7 +62,7 @@ function receive_upload(string $field,bool $public=false): ?array {
     }
     $filename=bin2hex(random_bytes(20)).'.'.$ext;
     $relative=$public?'assets/'.($ext==='pdf'?'documents':'img/uploads').'/'.$filename:'storage/specifications/'.$filename;
-    $absolute=$public?ROOT.'/public/'.$relative:ROOT.'/'.$relative;
+    $absolute=$public?PUBLIC_ROOT.'/'.$relative:ROOT.'/'.$relative;
     if(!is_dir(dirname($absolute))&&!mkdir(dirname($absolute),0750,true))throw new RuntimeException('Cannot create upload directory');
     if(!move_uploaded_file($f['tmp_name'],$absolute))throw new RuntimeException('Cannot store uploaded file');
     return ['path'=>$relative,'name'=>$name,'mime'=>$mime,'bytes'=>(int)$f['size']];

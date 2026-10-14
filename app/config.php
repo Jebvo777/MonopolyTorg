@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 $config = [
+    'public_root' => dirname(__DIR__).'/public',
     'db_host' => getenv('DB_HOST') ?: 'localhost',
     'db_port' => (int)(getenv('DB_PORT') ?: 3306),
     'db_name' => getenv('DB_NAME') ?: 'system404_monop',

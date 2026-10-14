@@ -16,7 +16,7 @@ function slugify(string $text): string {
 }
 function admin_asset(string $path,bool $required=false): string {
     $path=trim($path);if($path===''){if($required)throw new InvalidArgumentException('Выберите файл.');return '';}
-    if(!preg_match('~^(?:assets/|favicon\.ico$|apple-touch-icon\.png$)[A-Za-z0-9_./-]*$~',$path)||str_contains($path,'..')||!is_file(ROOT.'/public/'.$path))throw new InvalidArgumentException('Выберите существующий файл из медиатеки.');
+    if(!preg_match('~^(?:assets/|favicon\.ico$|apple-touch-icon\.png$)[A-Za-z0-9_./-]*$~',$path)||str_contains($path,'..')||!is_file(PUBLIC_ROOT.'/'.$path))throw new InvalidArgumentException('Выберите существующий файл из медиатеки.');
     return $path;
 }
 function register_media(array $file): void { query('INSERT INTO media (file_path,original_name,alt,mime,bytes) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE original_name=VALUES(original_name),mime=VALUES(mime),bytes=VALUES(bytes)',[$file['path'],$file['name'],'',$file['mime'],$file['bytes']]); }

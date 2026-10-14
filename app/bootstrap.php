@@ -2,6 +2,7 @@
 declare(strict_types=1);
 define('ROOT', dirname(__DIR__));
 $config = require __DIR__ . '/config.php';
+define('PUBLIC_ROOT', rtrim((string)$config['public_root'], '/\\'));
 date_default_timezone_set($config['timezone']);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
@@ -59,12 +60,17 @@ function rich(string $html): string {
         if (in_array($node->nodeName,['td','th'],true))foreach(['colspan','rowspan'] as $k) if(isset($attrs[$k])&&ctype_digit($attrs[$k])&&(int)$attrs[$k]<=30)$node->setAttribute($k,$attrs[$k]);
         if ($node->nodeName==='img') {
             $src=$attrs['src']??'';
-            if (!preg_match('~^(?:'.preg_quote(url('assets/'),'~').'|assets/)[a-zA-Z0-9_./-]+\.(?:jpg|jpeg|png|gif|webp|svg)$~i',$src) || str_contains($src,'..')) { $node->parentNode?->removeChild($node);continue; }
-            $node->setAttribute('src',str_starts_with($src,'assets/')?asset($src):$src);$node->setAttribute('alt',$attrs['alt']??'Продукция торговой компании «Монополия»');$node->setAttribute('loading','lazy');
+            if (!preg_match('~^(?:'.preg_quote(url('assets/'),'~').'|/?assets/)[a-zA-Z0-9_./-]+\.(?:jpg|jpeg|png|gif|webp|svg)$~i',$src) || str_contains($src,'..')) { $node->parentNode?->removeChild($node);continue; }
+            if(str_starts_with(ltrim($src,'/'),'assets/'))$src=asset(ltrim($src,'/'));
+            $node->setAttribute('src',$src);$node->setAttribute('alt',$attrs['alt']??'Продукция торговой компании «Монополия»');$node->setAttribute('loading','lazy');
         }
         if ($node->nodeName==='a') {
             $href=$attrs['href']??'';
-            if (preg_match('~^(https?://|mailto:|tel:|/|assets/)~i',$href)&&!str_starts_with($href,'//'))$node->setAttribute('href',str_starts_with($href,'assets/')?asset($href):$href);
+            if (preg_match('~^(https?://|mailto:|tel:|/|assets/)~i',$href)&&!str_starts_with($href,'//')){
+                if(str_starts_with($href,'assets/'))$href=asset($href);
+                elseif(str_starts_with($href,'/')&&!(config('base_path')&&($href===config('base_path')||str_starts_with($href,config('base_path').'/'))))$href=url($href);
+                $node->setAttribute('href',$href);
+            }
             $node->setAttribute('rel','noopener');
         }
     }
@@ -92,7 +98,7 @@ function track_visit(string $path,?int $productId=null): void {
 set_exception_handler(function(Throwable $ex):void {
     error_log((string)$ex);
     if(PHP_SAPI==='cli'){fwrite(STDERR,"Ошибка: ".$ex->getMessage()."\n");exit(1);}
-    if(str_starts_with($_SERVER['REQUEST_URI']??'','/api/'))json_response(['ok'=>false,'error'=>'Не удалось обработать запрос. Повторите попытку или напишите на monopoly@list.ru.'],500);
+    if(str_starts_with($_SERVER['REQUEST_URI']??'',config('base_path').'/api/'))json_response(['ok'=>false,'error'=>'Не удалось обработать запрос. Повторите попытку или напишите на monopoly@list.ru.'],500);
     http_response_code(503);header('Content-Type: text/html; charset=utf-8');
     echo '<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Связаться с торговой компанией «Монополия»</title><link rel="stylesheet" href="'.e(asset('assets/css/system.css')).'"><body><main class="service-error"><h1>Свяжитесь с нами напрямую</h1><p>Сервис заявок временно недоступен. Отправьте спецификацию по электронной почте, и мы подготовим предложение.</p><a href="mailto:monopoly@list.ru">monopoly@list.ru</a><p><a href="tel:+78129328648">+7 (812) 932-86-48</a></p></main></body></html>';
 });
